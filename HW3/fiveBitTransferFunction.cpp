@@ -83,7 +83,20 @@ interval interval::subtract(interval a, interval b) {
 }
 
 interval interval::bitwise_and(interval a, interval b) {
-     
+  bool negative = false;
+  bool positive = false;
+  if((a.lo < 0 || a.hi < 0) && (b.lo < 0 || b.hi < 0))
+    negative = true;
+  if(a.lo > 0 || a.hi > 0 || b.lo > 0 || b.hi > 0)
+    positive = true;     
+  if(negative && positive)
+    return interval(minimum, maximum, bits);
+  else if (negative)
+    return interval(minimum, 0, bits);
+  else if(positive)
+    return interval(0, maximum, bits);
+  else
+    return interval(0, 0, bits);
 }
 
 /*---------------------------------subtract cases------------------------------------------------*/
@@ -94,7 +107,7 @@ void test1() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-16, 15, bits));
 }
 
@@ -104,7 +117,7 @@ void test2() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-1, 1, bits));
 }
 
@@ -114,7 +127,7 @@ void test3() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-16, 15, bits));
 }
 
@@ -124,7 +137,7 @@ void test4() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-16, 15, bits));
 }
 
@@ -134,7 +147,7 @@ void test5() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-16, 15, bits));
 }
 
@@ -144,7 +157,7 @@ void test6() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-16, 15, bits));
 }
 
@@ -154,11 +167,9 @@ void test7() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-16, 15, bits));
 }
-
-
 
 void test8() {
  interval a(-16, 0, bits);
@@ -166,7 +177,7 @@ void test8() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  assert(result == interval(-16, 15, bits));
 }
 
@@ -177,8 +188,8 @@ void test9() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
- //assert(result == interval(-16, 15, bits));
+ cout << "subtract result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(12, 14, bits));
 }
 
 /*------------------------------------------bitwie_and cases--------------------------------*/
@@ -189,8 +200,8 @@ void test10() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.bitwise_and(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
- //assert(result == interval(-16, 15, bits));
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(0, 15, bits));
 }
 
 void test11() {
@@ -199,8 +210,58 @@ void test11() {
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.bitwise_and(a, b);
- cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
- //assert(result == interval(-16, 11, bits));
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(-16, 15, bits));
+}
+
+void test12() {
+ interval a(-5, -1, bits);
+ interval b(-15, -10, bits);
+ cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
+ cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
+ interval result = a.bitwise_and(a, b);
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(-16, 0, bits));
+}
+
+void test13() {
+ interval a(-5, -1, bits);
+ interval b(10, 15, bits);
+ cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
+ cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
+ interval result = a.bitwise_and(a, b);
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(0, 15, bits));
+}
+
+void test14() {
+ interval a(-5, 1, bits);
+ interval b(-15, 10, bits);
+ cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
+ cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
+ interval result = a.bitwise_and(a, b);
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(-16, 15, bits));
+}
+
+void test15() {
+ interval a(1, 5, bits);
+ interval b(10, 15, bits);
+ cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
+ cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
+ interval result = a.bitwise_and(a, b);
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(0, 15, bits));
+}
+
+void test16() {
+ interval a(0, 1, bits);
+ interval b(-15, -10, bits);
+ cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
+ cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
+ interval result = a.bitwise_and(a, b);
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(0, 15, bits));
 }
 
 int main() {
@@ -214,6 +275,10 @@ int main() {
   test8();
   test9();
   test10();
-  test11();
+  test12();
+  test13();
+  test14();
+  test15();
+  test16();
   return 0;
 }
