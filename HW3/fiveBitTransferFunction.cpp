@@ -28,11 +28,22 @@ int interval::getIntervalValue(int value) {
 }
 
 interval interval::subtract(interval a, interval b) {
+ int x = a.lo - b.lo;
+ int y = a.lo - b.hi;
+ int z = a.hi - b.lo;
+ int w = a.hi - b.hi;
+ if((x < minimum && y < minimum && z < minimum && w < minimum) || 
+    (x > maximum && y > maximum && z > maximum && w > maximum)) {
+   x = getIntervalValue(x);
+   y = getIntervalValue(y);
+   z = getIntervalValue(z);
+   w = getIntervalValue(w);
+ }
  vector<int> values;
- values.push_back(a.lo - b.lo);
- values.push_back(a.lo - b.hi);
- values.push_back(a.hi - b.lo);
- values.push_back(a.hi - b.hi);
+ values.push_back(x);
+ values.push_back(y);
+ values.push_back(z);
+ values.push_back(w);
  std::sort(values.begin(), values.end());
  if(values[0] < minimum && values[3] > maximum) 
    return interval(minimum, maximum, bits);
@@ -159,16 +170,18 @@ void test8() {
  assert(result == interval(-16, 15, bits));
 }
 
-/*------------------------------------------bitwie_and cases--------------------------------*/
+
 void test9() {
- interval a(-16, 15, bits);
- interval b(-16, 15, bits);
+ interval a(-16, -15, bits);
+ interval b(3, 4, bits);
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
- interval result = a.bitwise_and(a, b);
+ interval result = a.subtract(a, b);
  cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
  //assert(result == interval(-16, 15, bits));
 }
+
+/*------------------------------------------bitwie_and cases--------------------------------*/
 
 void test10() {
  interval a(-16, 15, bits);
