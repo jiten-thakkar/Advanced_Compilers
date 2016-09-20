@@ -151,7 +151,7 @@ void test7() {
 
 void test8() {
  interval a(-16, 0, bits);
- interval b(15, 3, bits);
+ interval b(-15, 3, bits);
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
  interval result = a.subtract(a, b);
