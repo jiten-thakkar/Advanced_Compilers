@@ -264,6 +264,16 @@ void test16() {
  assert(result == interval(0, 15, bits));
 }
 
+void test17() {
+ interval a(0, 0, bits);
+ interval b(-15, -10, bits);
+ cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
+ cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
+ interval result = a.bitwise_and(a, b);
+ cout << "bitwise_and result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
+ assert(result == interval(0, 0, bits));
+}
+
 int main() {
   test1();
   test2();
@@ -280,5 +290,6 @@ int main() {
   test14();
   test15();
   test16();
+  test17();
   return 0;
 }
