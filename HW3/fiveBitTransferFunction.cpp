@@ -5,10 +5,6 @@
 #include <algorithm>
 
 #define bits 5
-/*#define maxPossible (pow(2, bits) - 1)
-#define maximum maxPossible/2
-#define minimum (maximum + 1) * -1*/
-
 
 using namespace std;
 
@@ -52,7 +48,11 @@ interval interval::subtract(interval a, interval b) {
      minimumMax = values[2];
    else
      minimumMax = values[3];
-   return interval(getIntervalValue(minimumMax), maximum, bits);
+   int newLow = getIntervalValue(minimumMax); 
+   for(int i=0; i<4; i++)
+     if(values[i] >= minimum && values[i] < newLow)
+       newLow = values[i];
+   return interval(newLow, maximum, bits);
  } else if(values[3] <= maximum) {
    int maximumMin;
    if(values[3] < minimum)
@@ -63,24 +63,16 @@ interval interval::subtract(interval a, interval b) {
      maximumMin = values[1];
    else
      maximumMin = values[0];
-   return interval(minimum, getIntervalValue(maximumMin), bits);
+   int newMax = getIntervalValue(maximumMin);
+   for(int i=0; i<4; i++) 
+     if(values[i] <= maximum && values[i] > newMax)
+       newMax = values[i];
+   return interval(minimum, newMax, bits);
  }  
 }
 
 interval interval::bitwise_and(interval a, interval b) {
- int x = getIntervalValue(a.lo & b.lo);
- int y = getIntervalValue(a.lo & b.hi);
- int z = getIntervalValue(a.hi & b.lo);
- int w = getIntervalValue(a.hi & b.hi);
- int min=x, max=x;
- if(y > max) max = y;
- else if(y < min) min = y;  
- if(z > max) max = z;
- else if(z < min) min = z;  
- if(w > max) max = w;
- else if(w < min) min = w;
- interval finalInterval(min, max, bits);
- return finalInterval;  
+     
 }
 
 /*---------------------------------subtract cases------------------------------------------------*/
@@ -155,18 +147,19 @@ void test7() {
  assert(result == interval(-16, 15, bits));
 }
 
-/*------------------------------------------bitwie_and cases--------------------------------*/
+
 
 void test8() {
- interval a(0, 1, bits);
- interval b(0, 1, bits);
+ interval a(-16, 0, bits);
+ interval b(15, 3, bits);
  cout << "a:lo, a:hi :: " << a.getLo() << " " << a.getHi() << endl;
  cout << "b:lo, b:hi :: " << b.getLo() << " " << b.getHi() << endl;
- interval result = a.bitwise_and(a, b);
+ interval result = a.subtract(a, b);
  cout << "result:lo, result:hi :: " << result.getLo() << " " << result.getHi() << endl;
- //assert(result == interval(-1, 1, bits));
+ assert(result == interval(-16, 15, bits));
 }
 
+/*------------------------------------------bitwie_and cases--------------------------------*/
 void test9() {
  interval a(-16, 15, bits);
  interval b(-16, 15, bits);
