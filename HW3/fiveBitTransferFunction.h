@@ -6,25 +6,26 @@ class interval {
   // required that hi >= lo. the bounds are inclusive.
   int lo, hi;
   int bits;
-  int maximum, minimum, maxPossible;
+
 
 public:
+  //static int maximum, minimum, maxPossible;
   interval(int low, int high, int bits):lo(low), hi(high), bits(bits) {
-   maxPossible = pow(2, bits) - 1;
-   maximum = maxPossible/2;
-   minimum = (maximum + 1) * -1;
+   //maxPossible = pow(2, bits) - 1;
+   //maximum = maxPossible/2;
+   //minimum = (maximum + 1) * -1;
   };
   // these functions must trigger an assertion violation when presented with any
   // invalid interval, and must never return an invalid interval
 
   // requirement: be sound and fully precise
   // the second argument is to be subtracted from the first
-  interval subtract(interval, interval);
+  static interval subtract(interval, interval);
 
   // requirement: be sound and don't always return top
-  interval bitwise_and(interval, interval);
+  static interval bitwise_and(interval, interval);
 
-  int getIntervalValue(int);
+  static int getIntervalValue(int);
    
   int getLo() {return lo;}
   int getHi() {return hi;}

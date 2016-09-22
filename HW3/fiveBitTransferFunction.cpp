@@ -8,6 +8,8 @@
 
 using namespace std;
 
+static int maximum, minimum, maxPossible;
+
 int interval::getIntervalValue(int value) {
  if(value > maximum) {
    int remainder = value % maximum;
@@ -275,6 +277,9 @@ void test17() {
 }
 
 int main() {
+  maxPossible = pow(2, bits) - 1;
+   maximum = maxPossible/2;
+   minimum = (maximum + 1) * -1;
   test1();
   test2();
   test3();
