@@ -1,5 +1,4 @@
 #include "interval.h"
-#include <vector>
 
 using namespace std;
 
@@ -34,14 +33,15 @@ interval interval::operator-(const interval &b) {
    z = getIntervalValue(z);
    w = getIntervalValue(w);
  }
- vector<int> values;
- values.push_back(x);
- values.push_back(y);
- values.push_back(z);
- values.push_back(w);
- std::sort(values.begin(), values.end());
- if(values[0] >= interval::MIN && values[3] <= interval::MAX)
-   return interval(values[0], values[3]);
+ int min=x, max=x;
+ if(y < min) min = y;
+ if(z < min) min = z;
+ if(w < min) min = w;
+ if(y > max) max = y;
+ if(z > max) max = z;
+ if(w > max) max = w;
+ if(min >= interval::MIN && max <= interval::MAX)
+   return interval(min, max);
  else
    return top();  
 }
